@@ -48,12 +48,17 @@ jobs:
         if: matrix.arch == 'x86_64'
         run: sudo apt-get install -y libc6-dev-i386
 
-      - name: Setup tmate session
-        if: matrix.arch == 'aarch64'
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: matrix.arch == 'aarch64'
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Symlink asm folder
+        if: matrix.arch == 'x86_64'
         run: sudo ln -s /usr/include/asm-generic/ /usr/include/asm
+
+      - name: Symlink asm folder
+        if: matrix.arch == 'aarch64'
+        run: sudo ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
 
       - name: Make build dir
         run: mkdir src/build
