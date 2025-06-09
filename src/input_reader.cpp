@@ -28,7 +28,7 @@ bool IsPowerOfTwo(size_t val) {
 	return !(val & (size_t) 0x01) && IsPowerOfTwo(val >> 1);
 }
 
-InputReader::InputReader(FILE* read_file) : InputReader(read_file, 1048576) { }
+InputReader::InputReader(FILE* read_file) : InputReader(read_file, 16384) { }
 
 InputReader::InputReader(FILE* read_file, const size_t block_size)
     : block_size(block_size),
@@ -99,7 +99,7 @@ GetBufferResult InputReader::RefreshBuffers() {
 	size_t num_chars_read_from_file = cqe->res;
 
 	// Update the current and end pointer of the process buffer
-	assert(num_chars_read_from_file < process_buf.size());
+	assert(num_chars_read_from_file <= process_buf.size());
 	process_buf.resize(num_chars_read_from_file);
 	process_buf_curr_cursor = process_buf.begin();
 
@@ -146,7 +146,8 @@ ReadDomainResult InputReader::GetDomain(DomainInputInfo& domain_info) {
 		// First check if the process buffer needs to be refreshed
 		if (process_buf_curr_cursor == process_buf.end()) {
 			// First write the remainder of the previous process_buf into the current
-			curr_domain_cursor = std::copy(domain_begin_cursor, process_buf.end(), curr_domain_cursor);
+			if ((process_buf.end() - domain_begin_cursor) < (curr_domain.end() - curr_domain_cursor))
+				curr_domain_cursor = std::copy(domain_begin_cursor, process_buf.end(), curr_domain_cursor);
 
 			// Get a new process buffer and return if no new data is available
 			res = RefreshBuffers();
