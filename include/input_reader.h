@@ -7,7 +7,7 @@
 
 #include <array>
 #include <memory>
-#include <string>
+#include <vector>
 
 /**
  * @brief Type trait that determines if the template parameter val is a power of two during compile
@@ -122,17 +122,6 @@ private:
 	const size_t block_size;
 
 	/**
-	 * @brief Points to the data currently being processed in process_buf
-	 */
-	char* process_buf_curr_ptr;
-	/**
-	 * @brief Points to the end of the data currently being processed in process_buf
-	 *
-	 * This pointer points to the data \b after the last element that can be legally accessed
-	 */
-	char* process_buf_end_ptr;
-
-	/**
 	 * @brief Points to the data block in process_buf that is being processed with simd
 	 * instructions
 	 *
@@ -190,19 +179,24 @@ private:
 	 * When new data is requested and available, the process_buf and read_buf pointers are
 	 * swapped
 	 */
-	std::unique_ptr<char[], decltype(&::free)> process_buf;
+	std::vector<char> process_buf;
 	/**
 	 * @brief Contains an array of size block_size, used for reading in data from read_file
 	 *
-	 * When new data is requested and available, the process_buf and read_buf pointers are
+	 * When new data is requested and available, the process_buf and read_buf vectors are
 	 * swapped
 	 */
-	std::unique_ptr<char[], decltype(&::free)> read_buf;
+	std::vector<char> read_buf;
+
+	/**
+	 * @brief Points to the data currently being processed in process_buf
+	 */
+	std::vector<char>::iterator process_buf_curr_cursor;
 
 	/**
 	 * @brief Contains a pointer to the domain name in process_buf currently being read
 	 */
-	char* domain_begin_ptr;
+	std::vector<char>::iterator domain_begin_cursor;
 	/**
 	 * @brief Used for tracking if any invalid characters have been found in the current domain
 	 */
@@ -216,7 +210,7 @@ private:
 	 */
 	std::array<char, DOMAIN_NAME_MAX_SIZE> curr_domain;
 	/**
-	 * @brief Contains the number of valid characters present is curr_domain
+	 * @brief Contains the current cursor into the current domain buffer.
 	 */
-	int curr_domain_written;
+	std::array<char, DOMAIN_NAME_MAX_SIZE>::iterator curr_domain_cursor;
 };

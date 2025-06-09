@@ -27,6 +27,10 @@ if(BUILD_DOCS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
 endif()
 
+if (CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.2 -msse3 -mavx2")
+endif()
+
 if(NOT BUILD_SANICDNS)
     return()
 endif()
@@ -46,9 +50,8 @@ endif()
 
 add_definitions(-DSPDLOG_NO_EXCEPTIONS)
 
-# Compiler Flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mssse3 -msse4.2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -mssse3 -msse4.2")
+# Compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
 
 if(OPTIMIZE_FOR_NATIVE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
