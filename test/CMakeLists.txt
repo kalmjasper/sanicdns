@@ -5,6 +5,7 @@ set(
     "${CMAKE_CURRENT_SOURCE_DIR}/dns_packet_constructor_test.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/dns_packet_test.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/dpdk_wrappers_test.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/input_reader_test.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/net_info_test.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_main.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/thread_manager_test.cc"
@@ -28,7 +29,7 @@ gtest_discover_tests(tests EXTRA_ARGS --no-huge)
 set(TEST_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/resources/resolvers_good.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources/resolvers_bad.txt"
-    "${CMAKE_CURRENT_SOURCE_DIR}/resources/FileTestBasic.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources/test_list.txt"
 )
 
 # Copy each test file to the build directory
